@@ -1,0 +1,77 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Twitch Clip Show</title>
+  <style>
+    html, body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="clipPlayer" allowfullscreen></iframe>
+
+  <script>
+    const clientId = 'd74b4wrjw11mnujr1cmbv3rgldz95c';
+    const accessToken = 'sqgjzt85svtjebwqc8m4499r9765sf';
+    const userLogin = 'Ignaris_';
+
+     async function getUserId() {
+    const res = await fetch(`https://api.twitch.tv/helix/users?login=${userLogin}`, {
+      headers: {
+        'Client-ID': clientId,
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    const json = await res.json();
+    return json.data[0].id;
+  }
+
+  async function getClips(userId) {
+    const res = await fetch(`https://api.twitch.tv/helix/clips?broadcaster_id=${userId}&first=100`, {
+      headers: {
+        'Client-ID': clientId,
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    const json = await res.json();
+    return json.data.filter(c => c.view_count >= 3);
+  }
+
+  function playClip(clip) {
+    const iframe = document.getElementById('clipPlayer');
+    iframe.src = `${clip.embed_url}&parent=yourusername.github.io`;
+
+    // Schedule next clip after current clip's duration + small buffer (2 sec)
+    const delay = Math.ceil(clip.duration + 2) * 1000;
+    setTimeout(playNextClip, delay);
+  }
+
+  function playNextClip() {
+    if (clips.length === 0) return;
+    const clip = clips[Math.floor(Math.random() * clips.length)];
+    playClip(clip);
+  }
+
+  async function startShow() {
+    const userId = await getUserId();
+    clips = await getClips(userId);
+    if (clips.length === 0) {
+      alert("No clips with 3+ views found.");
+      return;
+    }
+    playNextClip();
+  }
+
+  startShow();
+</script>
+</body>
+</html>
