@@ -20,7 +20,7 @@
 
   <script>
     const clientId = 'd74b4wrjw11mnujr1cmbv3rgldz95c';
-    const accessToken = 'sqgjzt85svtjebwqc8m4499r9765sf';
+    const accessToken = 'sqgjzt85svtjebwqc8m4499r9765sf'; // Only for dev/testing
     const userLogin = 'Ignaris_';
 
     let clips = [];
@@ -57,4 +57,25 @@
 
     function playNextClip() {
       if (clips.length === 0) return;
-      const clip = clips[Math.floor(Math.random() * clips.length)];*]()
+      const clip = clips[Math.floor(Math.random() * clips.length)];
+      playClip(clip);
+    }
+
+    async function init() {
+      try {
+        const userId = await getUserId();
+        clips = await getClips(userId);
+        if (clips.length > 0) {
+          playNextClip();
+        } else {
+          console.error('No clips found.');
+        }
+      } catch (e) {
+        console.error('Error initializing:', e);
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
