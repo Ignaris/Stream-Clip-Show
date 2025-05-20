@@ -51,7 +51,7 @@
       console.log('Playing clip:', clip); // Add this line
     
       const iframe = document.getElementById('clipPlayer');
-      iframe.src = `https://player.twitch.tv/?clip=${clip.id}&channel=ignaris_&parent=ignaris.github.io&autoplay=true`;
+      iframe.src = `https://player.twitch.tv/?clip=${clip.id}&parent=ignaris.github.io&autoplay=true`;
     
       const delay = Math.ceil(clip.duration + 2) * 1000;
       setTimeout(playNextClip, delay);
