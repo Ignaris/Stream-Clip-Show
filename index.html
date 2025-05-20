@@ -46,14 +46,17 @@
       const json = await res.json();
       return json.data.filter(c => c.view_count >= 3);
     }
-
-    function playClip(clip) {
+  
+        function playClip(clip) {
+      console.log('Playing clip:', clip); // Add this line
+    
       const iframe = document.getElementById('clipPlayer');
       iframe.src = `https://player.twitch.tv/?clip=${clip.id}&parent=ignaris.github.io&autoplay=true`;
-
+    
       const delay = Math.ceil(clip.duration + 2) * 1000;
       setTimeout(playNextClip, delay);
     }
+
 
     function playNextClip() {
       if (clips.length === 0) return;
